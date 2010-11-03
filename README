@@ -1,0 +1,5 @@
+Kernels for different hardware, in Archlinux package format.
+
+kernel26-rt-k7
+--------------
+For an AMD Athlon XP 2000+ system

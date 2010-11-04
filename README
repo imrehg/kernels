@@ -1,5 +1,14 @@
-Kernels for different hardware, in Archlinux package format.
+Kernels for different hardware, in Archlinux [1] package format.
 
 kernel26-rt-k7
 --------------
 For an AMD Athlon XP 2000+ system
+includes: Xenomai, Analogy, Comedi
+
+kernel26-rt-pentiumm
+--------------------
+For Celeron M laptop
+includes: Xenomai, Analogy
+
+
+[1] http://archlinux.org

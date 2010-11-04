@@ -4,9 +4,10 @@ _kernelname=${pkgname:8}
 _extradir=""
 _xenomaiver=2.5.5.2
 _adeosver=2.7-04
+_makeflag=-j6
 pkgver=${_basekernel}
 pkgrel=1
-pkgdesc="Lab Edition ofthe Linux Kernel and modules (ThinkPad R50e)"
+pkgdesc="Real time kernel for AMD Athlon XP (K7) desktop"
 arch=(i686)
 license=('GPL2')
 url="http://www.kernel.org"
@@ -61,12 +62,14 @@ build() {
 
   cat ../config${_kernelname} >./.config
 
-  # Change kernel name in config file
-  if [ "${_kernelname}" != "" ]; then
-    sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
-  fi
+## No need to do this if we do make LOCALVERSION, otherwise
+## it might be appended to the nam twice
+#  # Change kernel name in config file
+#  if [ "${_kernelname}" != "" ]; then
+#    sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"${_kernelname}\"|g" ./.config
+#  fi
 
-  # get kernel version
+  # set then get kernel version
   make LOCALVERSION=${_kernelname} prepare
   _kernver="$(make kernelrelease)"
   # load configuration
@@ -79,9 +82,9 @@ build() {
   #msg "Stopping build"
   #return 1
   ####################
-  make -j6 LOCALVERSION=${_kernelver} [ARCH=${KARCH}] bzImage modules || return 1
+  make ${_makeflag} LOCALVERSION=${_kernelname} [ARCH=${KARCH}] bzImage modules || return 1
   mkdir -p ${pkgdir}/{lib/modules,boot}
-  make -j6 INSTALL_MOD_PATH=${pkgdir} modules_install || return 1
+  make ${_makeflag} LOCALVERSION=${_kernelname} INSTALL_MOD_PATH=${pkgdir} modules_install || return 1
 #  cp System.map ${pkgdir}/boot/System.map26
 #  cp arch/$KARCH/boot/bzImage ${pkgdir}/boot/vmlinuz26
   cp System.map ${pkgdir}/boot/System.map26${_kernelname}
@@ -201,8 +204,7 @@ build() {
   # remove firmware, as separate package provides them.
   rm -fr ${pkgdir}/lib/firmware
 }
-
 md5sums=('f741879bcd3a5366a1bbe0ad5cdb7935'
-         '2e2aab8a2efc2e3b0628dcc2235e0d9b'
+         'e025960f7ebd62f6daac9c50dee6b3b0'
          '3066face08c5c0f97dbeeac2187e6815'
          '1ee31275830c77a024e27655d2fe8f69')
